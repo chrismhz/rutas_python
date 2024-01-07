@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Rutas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+<body class="bg-warning">
+    <center>
+        <br>
+    <h1>ALGORITMO DE CLARKE Y WRIGHT</h1>
+    <label>"Ruta en carrtera"</label>
+    <br>
+    <br>
+    <form id="rutaForm">
+        <label for="maxCarga">Máxima Carga:</label>
+        <input type="number" id="maxCarga" name="maxCarga" required>
+        <br>
+        <br>
+        <img src="https://cdn-icons-png.flaticon.com/512/2554/2554978.png" width="200" height="200"/>
+        <h2>Pedidos:</h2>
+        <div id="pedidos">
+            <!-- Campo de entrada para "JiloYork" -->
+            <label for="JiloYork">JiloYork:</label>
+            <input type="number" name="JiloYork" id="JiloYork" value="0">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Toluca" -->
+            <label for="Toluca">Toluca:</label>
+            <input type="number" name="Toluca" id="Toluca" value="5">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Atlacomulco" -->
+            <label for="Atlacomulco">Atlacomulco:</label>
+            <input type="number" name="Atlacomulco" id="Atlacomulco" value="8">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Guadalajara" -->
+            <label for="Guadalajara">Guadalajara:</label>
+            <input type="number" name="Guadalajara" id="Guadalajara" value="7">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Monterrey" -->
+            <label for="Monterrey">Monterrey:</label>
+            <input type="number" name="Monterrey" id="Monterrey" value="2">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Cancún" -->
+            <label for="Cancun">Cancún:</label>
+            <input type="number" name="Cancun" id="Cancun" value="9">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Morelia" -->
+            <label for="Morelia">Morelia:</label>
+            <input type="number" name="Morelia" id="Morelia" value="6">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Aguascalientes" -->
+            <label for="Aguascalientes">Aguascalientes:</label>
+            <input type="number" name="Aguascalientes" id="Aguascalientes" value="11">
+            <br>
+            <br>
+            <!-- Campo de entrada para "Queretaro" -->
+            <label for="Queretaro">Queretaro:</label>
+            <input type="number" name="Queretaro" id="Queretaro" value="4">
+            <br>
+            <br>
+            <!-- Campo de entrada para "CDMX" -->
+            <label for="CDMX">CDMX:</label>
+            <input type="number" name="CDMX" id="CDMX" value="0">
+            <br>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-danger">Enviar</button>
+    </form>
+<br> 
+<br>
+    <h1>Resultados encontrados...</h1>
+    <pre id="resultado"></pre>
+        <br>
+    <img src="https://cdn-icons-png.flaticon.com/512/1279/1279035.png" width="200" height="200"/>
+        <br>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const rutaForm = document.getElementById("rutaForm");
+            const resultadoPre = document.getElementById("resultado");
+
+            rutaForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const formData = new FormData(rutaForm);
+                const maxCarga = formData.get("maxCarga");
+                const pedidos = {};
+
+                // Recorre los campos de entrada de pedidos y agrega los valores al objeto de pedidos
+                formData.forEach((cantidad, ciudad) => {
+                    if (ciudad !== "maxCarga") {
+                        pedidos[ciudad] = parseInt(cantidad);
+                    }
+                });
+
+                // Enviar solicitud POST a tu API Flask
+                fetch("/calcular_rutas", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        pedidos,
+                        max_carga: parseInt(maxCarga)
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    resultadoPre.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+            });
+        });
+    </script>
+    </center>
+</body>
+</html>
